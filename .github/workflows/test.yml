@@ -1,0 +1,24 @@
+name: Test
+
+on:
+  workflow_dispatch:
+    inputs:
+      test_value:
+        description: 'Test value'
+        type: string
+        required: true
+
+jobs:
+  test-values:
+    runs-on: ubuntu-latest
+    concurrency: test-env
+    environment: test-env
+
+    steps:
+      - name: Test workflow
+        run: |
+          echo "plain_value: ${{ inputs.test_value }}"
+          echo "actor: ${{ github.actor }}"
+          echo "triggering actor: ${{ github.triggering_actor }}"
+          echo "env var: ${{ env.DB_HOST }}"
+          echo "env secret: ${{ env.DB_CREDENTIALS }}"

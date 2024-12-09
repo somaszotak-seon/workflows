@@ -20,5 +20,5 @@ jobs:
           echo "plain_value: ${{ inputs.test_value }}"
           echo "actor: ${{ github.actor }}"
           echo "triggering actor: ${{ github.triggering_actor }}"
-          echo "env var: ${{ env.DB_HOST }}"
-          echo "env secret: ${{ env.DB_CREDENTIALS }}"
+          echo "env var: ${{ vars.DB_HOST }}"
+          echo "env secret: ${{ secrets.DB_CREDENTIALS }}"

@@ -28,3 +28,4 @@ jobs:
           echo "triggering actor: ${{ github.triggering_actor }}"
           echo "env var: ${{ vars.DB_HOST }}"
           echo "env secret: ${{ secrets.DB_CREDENTIALS }}"
+          echo Approve at: "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"

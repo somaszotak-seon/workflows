@@ -13,14 +13,19 @@ run-name: Deploy to environment '${{ inputs.target_env }}'
 jobs:
   trigger-test:
     name: Deployment to '${{ inputs.target_env }}'
+    concurrency: 
+      group: ${{ inputs.target_env }}
+      cancel-in-progress: true
     uses: ./.github/workflows/test.yml
     secrets: inherit
     with:
       target_env: ${{ inputs.target_env }}
       test_value: 'manual'
-  second-job:
-    runs-on: ubuntu-latest
 
+  second-job:
+    concurrency: 
+      group: ${{ inputs.target_env }}
+    runs-on: ubuntu-latest
     steps:
       - name: Print somehting after approve
         run: echo Something after approve...

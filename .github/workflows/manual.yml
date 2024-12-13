@@ -18,3 +18,9 @@ jobs:
     with:
       target_env: ${{ inputs.target_env }}
       test_value: 'manual'
+  second-job:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Print somehting after approve
+        run: echo Something after approve...

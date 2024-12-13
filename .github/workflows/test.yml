@@ -12,7 +12,7 @@ on:
         type: string
         required: true
 
-run-name: Test using ${{ inputs.target_env }}
+# run-name: Test using ${{ inputs.target_env }}
 
 jobs:
   test-values:

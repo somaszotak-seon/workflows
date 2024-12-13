@@ -1,0 +1,19 @@
+name: Manual
+
+on:
+  workflow_dispatch:
+    inputs:
+      target_env:
+        description: 'Target environment'
+        type: environment
+        required: true
+
+run-name: Deploy to environment '${{ inputs.target_env }}'
+
+jobs:
+  trigger-test:
+    name: Deployment to '${{ inputs.target_env }}'
+    uses: ./.github/workflows/test.yml
+    with:
+      target_env: ${{ inputs.target_env }}
+      test_value: 'manual'

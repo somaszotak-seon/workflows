@@ -17,7 +17,6 @@ on:
 jobs:
   test-values:
     runs-on: ubuntu-latest
-    concurrency: ${{ inputs.target_env }}
     environment: ${{ inputs.target_env }}
 
     steps:

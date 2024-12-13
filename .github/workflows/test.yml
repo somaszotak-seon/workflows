@@ -1,11 +1,11 @@
 name: Test
 
 on:
-  workflow_dispatch:
+  workflow_call:
     inputs:
       target_env:
         description: 'Target environment'
-        type: environment
+        type: string
         required: true
       test_value:
         description: 'Test value'

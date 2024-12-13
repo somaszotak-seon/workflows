@@ -14,6 +14,7 @@ jobs:
   trigger-test:
     name: Deployment to '${{ inputs.target_env }}'
     uses: ./.github/workflows/test.yml
+    secrets: inherit
     with:
       target_env: ${{ inputs.target_env }}
       test_value: 'manual'

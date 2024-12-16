@@ -22,6 +22,16 @@ jobs:
       target_env: ${{ inputs.target_env }}
       test_value: 'manual'
 
+  second-approve:
+    name: Second approval bound job using '${{ inputs.target_env }}'
+    concurrency: 
+      group: ${{ inputs.target_env }}
+    uses: ./.github/workflows/test.yml
+    secrets: inherit
+    with:
+      target_env: ${{ inputs.target_env }}
+      test_value: 'second approval'
+
   second-job:
     concurrency: 
       group: ${{ inputs.target_env }}

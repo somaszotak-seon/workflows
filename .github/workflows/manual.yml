@@ -11,30 +11,35 @@ on:
 run-name: Deploy to environment '${{ inputs.target_env }}'
 
 jobs:
-  trigger-test:
-    name: Deployment to '${{ inputs.target_env }}'
-    concurrency: 
+  preview-changes:
+    name: Preview DB changes on '${{ inputs.target_env }}'
+    concurrency:
       group: ${{ inputs.target_env }}
       cancel-in-progress: true
     uses: ./.github/workflows/test.yml
     secrets: inherit
     with:
       target_env: ${{ inputs.target_env }}
-      test_value: 'manual'
+      test_value: 'preview'
 
-  second-approve:
+  apply-changes:
     name: Second approval bound job using '${{ inputs.target_env }}'
-    concurrency: 
-      group: ${{ inputs.target_env }}
+    needs: preview-changes
     uses: ./.github/workflows/test.yml
     secrets: inherit
     with:
       target_env: ${{ inputs.target_env }}
       test_value: 'second approval'
 
-  second-job:
-    concurrency: 
-      group: ${{ inputs.target_env }}
+  after-preview:
+    needs: preview-changes
+    runs-on: ubuntu-latest
+    steps:
+      - name: Print somehting after approve
+        run: echo Something after approve...
+
+  after-apply:
+    needs: apply-changes
     runs-on: ubuntu-latest
     steps:
       - name: Print somehting after approve

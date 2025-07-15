@@ -20,8 +20,9 @@ jobs:
     environment: ${{ inputs.target_env }}
 
     steps:
-      - name: Fetch repo
+      - name: Fetch repository
         uses: actions/checkout@v4
+
       - name: Checkout PR
         run: gh pr checkout ${{ github.event.issue.number }}
         env:
@@ -35,5 +36,14 @@ jobs:
           echo LIQUIBASE_COMMAND_URL="${{ vars.LIQUIBASE_COMMAND_URL }}" >> .liquibase.env
 
       - name: Run migrations
-        run: ./scripts/run-db-migrations.sh ${{ inputs.execution_mode }}
+        run: |
+          scripts/run-db-migrations.sh ${{ inputs.execution_mode }}
 
+      - name: Comment migration diff
+        if: "${{ inputs.execution_mode == 'plan' && inputs.target_env == 'database-dev' }}"
+        run: |
+          echo "## DB migration diff (${{ inputs.target_env }})" > body
+          echo "\`\`\`sql" >> body
+          cat liquibase/lb-diff.sql >> body
+          echo "\`\`\`" >> body
+          gh pr comment ${{ github.event.issue.number }} --body-file body

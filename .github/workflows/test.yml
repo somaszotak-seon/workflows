@@ -31,8 +31,7 @@ jobs:
           echo "Execution mode: ${{ inputs.execution_mode }}"
           echo "actor: ${{ github.actor }}"
           echo "triggering actor: ${{ github.triggering_actor }}"
-          echo "env var: ${{ vars.DB_HOST }}"
-          echo "env secret: ${{ secrets.DB_CREDENTIALS }}"
-
+          echo "env var: ${{ vars.DEV_TEST_ENV_VAR }}"
+  
           # dump github event context
           echo "${{ toJson(github.event) }}"

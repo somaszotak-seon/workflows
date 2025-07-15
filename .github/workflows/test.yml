@@ -22,6 +22,12 @@ jobs:
       pull-requests: write
 
     steps:
+      - name: Acknowledge command
+        run: |
+          gh pr comment ${{ github.event.issue.number }} --body "Got it, ${{ inputs.execution_mode }} in progress :+1:"
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
       - name: Fetch repository
         uses: actions/checkout@v4
 

@@ -20,10 +20,12 @@ jobs:
     environment: ${{ inputs.target_env }}
 
     steps:
-      - name: Checkout
+      - name: Checkout repo
         uses: actions/checkout@v4
-        with:
-          ref: ${{ github.event.pull_request.head.ref }}
+      - name: Checkout PR
+        run: gh pr checkout ${{ github.event.issue.number }}
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Test workflow
         run: |
@@ -32,6 +34,4 @@ jobs:
           echo "actor: ${{ github.actor }}"
           echo "triggering actor: ${{ github.triggering_actor }}"
           echo "env var: ${{ vars.DEV_TEST_ENV_VAR }}"
-  
-          # dump github event context
-          echo "${{ toJson(github) }}"
+          git rev-parse HEAD

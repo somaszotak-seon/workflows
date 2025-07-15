@@ -34,4 +34,4 @@ jobs:
           echo "env var: ${{ vars.DEV_TEST_ENV_VAR }}"
   
           # dump github event context
-          echo "${{ toJson(github.event) }}"
+          echo "${{ toJson(github) }}"

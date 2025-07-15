@@ -15,18 +15,6 @@ on:
 run-name: 'DB migrations: ${{ inputs.target_env }} / ${{ inputs.execution_mode }}'
 
 jobs:
-  acknowledge:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
-      - name: Comment on PR
-        run: |
-          gh pr comment ${{ github.event.issue.number }} --body "Got it, '${{ inputs.execution_mode }}' in progress :+1:"
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
   run-migrations:
     runs-on: ubuntu-latest
     environment: ${{ inputs.target_env }}

@@ -15,6 +15,18 @@ on:
 run-name: 'DB migrations: ${{ inputs.target_env }} / ${{ inputs.execution_mode }}'
 
 jobs:
+  acknowledge:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Comment on PR
+        run: |
+          gh pr comment ${{ github.event.issue.number }} --body "Got it, '${{ inputs.execution_mode }}' in progress :+1:"
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
   run-migrations:
     runs-on: ubuntu-latest
     environment: ${{ inputs.target_env }}
@@ -22,10 +34,10 @@ jobs:
       pull-requests: write
 
     steps:
-      - name: Fetch repository
+      - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Checkout PR
+      - name: Checkout pull request head
         run: gh pr checkout ${{ github.event.issue.number }}
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -62,7 +74,7 @@ jobs:
         run: |
           echo "### Migration for '${{ inputs.target_env }}' complete." > body
           echo "Liquibase output:" >> body
-          echo "\`\`\`prolog" >> body
+          echo "\`\`\`" >> body
           cat liquibase/liquibase-output >> body
           echo "\`\`\`" >> body
           gh pr comment ${{ github.event.issue.number }} --body-file body

@@ -18,6 +18,8 @@ jobs:
   run-migrations:
     runs-on: ubuntu-latest
     environment: ${{ inputs.target_env }}
+    permissions:
+      pull-requests: write
 
     steps:
       - name: Fetch repository

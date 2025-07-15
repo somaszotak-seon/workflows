@@ -19,3 +19,5 @@ fi
 cat .liquibase.env
 echo ""
 echo "docker compose -f docker-compose-lb.yml run --rm id-verification-liquibase liquibase $COMMAND $OPTIONS"
+ls -la
+echo "SELECT * FROM seon_idv.sessions sx WHERE sx.id = '123';" > ./liquibase/lb-diff.sql

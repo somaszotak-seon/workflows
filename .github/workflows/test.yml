@@ -41,17 +41,29 @@ jobs:
         run: |
           scripts/run-db-migrations.sh ${{ inputs.execution_mode }}
 
-      - name: Comment migration diff
-        if: "${{ inputs.execution_mode == 'plan' && inputs.target_env == 'database-dev' }}"
+      - name: Print migration diff
+        if: "${{ inputs.execution_mode == 'plan' }}"
         run: |
           echo "### Migration plan for '${{ inputs.target_env }}' complete." > body
           echo "Please review the update script:" >> body
           echo "\`\`\`sql" >> body
-          cat liquibase/lb-diff.sql >> body
+          cat liquibase/liquibase-output >> body
           echo "\`\`\`" >> body
-          echo "If you are satisfied with the plan, run the following command:" >> body
+          echo "If you are satisfied with the plan, comment the following command to this PR:" >> body
           echo "\`\`\`" >> body
           echo "#db:apply" >> body
+          echo "\`\`\`" >> body
+          gh pr comment ${{ github.event.issue.number }} --body-file body
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Print migration output
+        if: "${{ inputs.execution_mode == 'apply' }}"
+        run: |
+          echo "### Migration for '${{ inputs.target_env }}' complete." > body
+          echo "Liquibase output:" >> body
+          echo "\`\`\`prolog" >> body
+          cat liquibase/liquibase-output >> body
           echo "\`\`\`" >> body
           gh pr comment ${{ github.event.issue.number }} --body-file body
         env:

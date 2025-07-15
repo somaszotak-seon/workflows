@@ -7,24 +7,32 @@ on:
         description: 'Target environment'
         type: string
         required: true
-      test_value:
-        description: 'Test value'
+      execution_mode:
+        description: 'Execution mode'
         type: string
         required: true
 
-# run-name: Test using ${{ inputs.target_env }}
+run-name: 'DB migrations: ${{ inputs.target_env }} / ${{ inputs.execution_mode }}'
 
 jobs:
-  test-values:
+  run-migrations:
     runs-on: ubuntu-latest
     environment: ${{ inputs.target_env }}
 
     steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.ref }}
+
       - name: Test workflow
         run: |
-          echo "plain_value: ${{ inputs.test_value }}"
+          echo Approve at: "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+          echo "Execution mode: ${{ inputs.execution_mode }}"
           echo "actor: ${{ github.actor }}"
           echo "triggering actor: ${{ github.triggering_actor }}"
           echo "env var: ${{ vars.DB_HOST }}"
           echo "env secret: ${{ secrets.DB_CREDENTIALS }}"
-          echo Approve at: "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+
+          # dump github event context
+          echo "${{ toJson(github.event) }}"

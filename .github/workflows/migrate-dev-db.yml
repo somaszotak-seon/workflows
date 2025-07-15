@@ -1,0 +1,31 @@
+name: Migrate dev DB
+run-name: Migrate dev DB
+
+on:
+  issue_comment:
+    types: [created]
+
+jobs:
+  plan:
+    name: Plan update SQL
+    needs: check-approval
+    if: ${{ github.event.comment.body == '#db:plan' }}
+    concurrency:
+      group: database-migrations-dev
+    uses: ./.github/workflows/test.yml
+    secrets: inherit
+    with:
+      target_env: database-dev
+      execution_mode: plan
+
+  apply:
+    name: Apply update SQL
+    needs: check-approval
+    if: ${{ github.event.comment.body == '#db:apply' }}
+    concurrency:
+      group: database-migrations-dev
+    uses: ./.github/workflows/test.yml
+    secrets: inherit
+    with:
+      target_env: database-dev
+      execution_mode: apply

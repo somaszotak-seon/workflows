@@ -47,3 +47,5 @@ jobs:
           cat liquibase/lb-diff.sql >> body
           echo "\`\`\`" >> body
           gh pr comment ${{ github.event.issue.number }} --body-file body
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}

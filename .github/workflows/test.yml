@@ -32,7 +32,7 @@ jobs:
           echo LIQUIBASE_SHOW_BANNER="false" > .liquibase.env
           echo LIQUIBASE_COMMAND_USERNAME="${{ secrets.LIQUIBASE_COMMAND_USERNAME }}" >> .liquibase.env
           echo LIQUIBASE_COMMAND_PASSWORD="${{ secrets.LIQUIBASE_COMMAND_PASSWORD }}" >> .liquibase.env
-          echo LIQUIBASE_COMMAND_URL="${{ secrets.LIQUIBASE_COMMAND_URL }}" >> .liquibase.env
+          echo LIQUIBASE_COMMAND_URL="${{ vars.LIQUIBASE_COMMAND_URL }}" >> .liquibase.env
 
       - name: Run migrations
         run: ./scripts/run-db-migrations.sh ${{ inputs.execution_mode }}

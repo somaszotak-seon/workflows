@@ -24,7 +24,7 @@ jobs:
     steps:
       - name: Acknowledge command
         run: |
-          gh pr comment ${{ github.event.issue.number }} --body "Got it, ${{ inputs.execution_mode }} in progress :+1:"
+          gh pr comment ${{ github.event.issue.number }} --body "Got it, '${{ inputs.execution_mode }}' in progress :+1:"
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 

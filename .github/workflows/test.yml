@@ -18,6 +18,8 @@ jobs:
   run-migrations:
     runs-on: ubuntu-latest
     environment: ${{ inputs.target_env }}
+    permissions:
+      pull-requests: write
 
     steps:
       - name: Fetch repository
@@ -42,8 +44,15 @@ jobs:
       - name: Comment migration diff
         if: "${{ inputs.execution_mode == 'plan' && inputs.target_env == 'database-dev' }}"
         run: |
-          echo "## DB migration diff (${{ inputs.target_env }})" > body
+          echo "### Migration plan for '${{ inputs.target_env }}' complete." > body
+          echo "Please review the update script:" >> body
           echo "\`\`\`sql" >> body
           cat liquibase/lb-diff.sql >> body
           echo "\`\`\`" >> body
+          echo "If you are satisfied with the plan, run the following command:" >> body
+          echo "\`\`\`" >> body
+          echo "#db:apply" >> body
+          echo "\`\`\`" >> body
           gh pr comment ${{ github.event.issue.number }} --body-file body
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}

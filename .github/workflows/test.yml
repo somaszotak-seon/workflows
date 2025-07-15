@@ -35,3 +35,4 @@ jobs:
           echo "triggering actor: ${{ github.triggering_actor }}"
           echo "env var: ${{ vars.DEV_TEST_ENV_VAR }}"
           git rev-parse HEAD
+          echo "${{ toJson(github.event.issue) }}"

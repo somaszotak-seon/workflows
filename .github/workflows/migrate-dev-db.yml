@@ -6,6 +6,16 @@ on:
     types: [created]
 
 jobs:
+  acknowledge:
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Acknowledge command
+        run: |
+          gh pr comment ${{ github.event.issue.number }} --body "Got it, '${{ inputs.execution_mode }}' in progress :+1:"
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
   plan:
     name: Plan update SQL
     if: ${{ github.event.comment.body == '#db:plan' }}

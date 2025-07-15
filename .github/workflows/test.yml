@@ -62,7 +62,7 @@ jobs:
         run: |
           echo "### Migration for '${{ inputs.target_env }}' complete." > body
           echo "Liquibase output:" >> body
-          echo "\`\`\`prolog" >> body
+          echo "\`\`\`" >> body
           cat liquibase/liquibase-output >> body
           echo "\`\`\`" >> body
           gh pr comment ${{ github.event.issue.number }} --body-file body

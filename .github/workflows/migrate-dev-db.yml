@@ -6,18 +6,6 @@ on:
     types: [created]
 
 jobs:
-  acknowledge:
-    if: ${{ github.event.comment.body == '#db:plan' || github.event.comment.body == '#db:apply' }}
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-      - name: Comment
-        run: |
-          gh pr comment ${{ github.event.issue.number }} --body "Working on it... :+1:"
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-  
   plan:
     name: Plan update SQL
     if: ${{ github.event.comment.body == '#db:plan' }}

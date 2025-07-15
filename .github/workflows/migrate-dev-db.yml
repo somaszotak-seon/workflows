@@ -8,7 +8,6 @@ on:
 jobs:
   plan:
     name: Plan update SQL
-    needs: check-approval
     if: ${{ github.event.comment.body == '#db:plan' }}
     concurrency:
       group: database-migrations-dev
@@ -20,7 +19,6 @@ jobs:
 
   apply:
     name: Apply update SQL
-    needs: check-approval
     if: ${{ github.event.comment.body == '#db:apply' }}
     concurrency:
       group: database-migrations-dev

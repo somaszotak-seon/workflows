@@ -20,19 +20,20 @@ jobs:
     environment: ${{ inputs.target_env }}
 
     steps:
-      - name: Checkout
+      - name: Fetch repo
         uses: actions/checkout@v4
-        with:
-          ref: ${{ github.event.pull_request.head.ref }}
+      - name: Checkout PR
+        run: gh pr checkout ${{ github.event.issue.number }}
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Test workflow
+      - name: Prepare environment
         run: |
-          echo Approve at: "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
-          echo "Execution mode: ${{ inputs.execution_mode }}"
-          echo "actor: ${{ github.actor }}"
-          echo "triggering actor: ${{ github.triggering_actor }}"
-          echo "env var: ${{ vars.DB_HOST }}"
-          echo "env secret: ${{ secrets.DB_CREDENTIALS }}"
+          echo LIQUIBASE_SHOW_BANNER="false" > .liquibase.env
+          echo LIQUIBASE_COMMAND_USERNAME="${{ secrets.LIQUIBASE_COMMAND_USERNAME }}" >> .liquibase.env
+          echo LIQUIBASE_COMMAND_PASSWORD="${{ secrets.LIQUIBASE_COMMAND_PASSWORD }}" >> .liquibase.env
+          echo LIQUIBASE_COMMAND_URL="${{ vars.LIQUIBASE_COMMAND_URL }}" >> .liquibase.env
 
-          # dump github event context
-          echo "${{ toJson(github.event) }}"
+      - name: Run migrations
+        run: ./scripts/run-db-migrations.sh ${{ inputs.execution_mode }}
+

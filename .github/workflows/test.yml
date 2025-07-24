@@ -31,11 +31,12 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Check approval
+        if: ${{ inputs.execution_mode == 'apply' }}
         run: |
           REVIEW_STATUS=$(gh pr view ${{ github.event.issue.number }} --json reviewDecision | jq .reviewDecision)
           if [ "$REVIEW_STATUS" != "APPROVED" ]; then
             echo "Pull request is not approved"
-            gh pr comment ${{ github.event.issue.number }} --body ":no_entry_sign: Pull request is not approved."
+            gh pr comment ${{ github.event.issue.number }} --body ":no_entry_sign: Cannot apply changes: pull request is not approved."
             exit 1
           fi
         env:

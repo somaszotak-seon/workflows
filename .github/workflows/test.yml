@@ -30,6 +30,17 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Check approval
+        run: |
+          REVIEW_STATUS=$(gh pr view ${{ github.event.issue.number }} --json reviewDecision | jq .reviewDecision)
+          if [ "$REVIEW_STATUS" != "APPROVED" ]; then
+            echo "Pull request is not approved"
+            gh pr comment ${{ github.event.issue.number }} --body ":no_entry_sign: Pull request is not approved."
+            exit 1
+          fi
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
       - name: Prepare environment
         run: |
           echo LIQUIBASE_SHOW_BANNER="false" > .liquibase.env

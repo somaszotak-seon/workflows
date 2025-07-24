@@ -15,18 +15,6 @@ on:
 run-name: 'DB migrations: ${{ inputs.target_env }} / ${{ inputs.execution_mode }}'
 
 jobs:
-  acknowledge:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
-      - name: Comment on PR
-        run: |
-          gh pr comment ${{ github.event.issue.number }} --body "Got it, '${{ inputs.execution_mode }}' in progress :+1:"
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
   run-migrations:
     runs-on: ubuntu-latest
     environment: ${{ inputs.target_env }}
@@ -39,6 +27,17 @@ jobs:
 
       - name: Checkout pull request head
         run: gh pr checkout ${{ github.event.issue.number }}
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Check approval
+        run: |
+          REVIEW_STATUS=$(gh pr view ${{ github.event.issue.number }} --json reviewDecision | jq .reviewDecision)
+          if [ "$REVIEW_STATUS" != "APPROVED" ]; then
+            echo "Pull request is not approved"
+            gh pr comment ${{ github.event.issue.number }} --body ":no_entry_sign: Pull request is not approved."
+            exit 1
+          fi
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 

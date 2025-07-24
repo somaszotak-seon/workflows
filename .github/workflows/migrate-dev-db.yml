@@ -1,5 +1,4 @@
 name: Migrate dev DB
-run-name: Migrate dev DB
 
 on:
   issue_comment:
